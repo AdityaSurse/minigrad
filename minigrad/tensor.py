@@ -126,7 +126,7 @@ class Tensor:
         return self + (-other)
         
     def __truediv__(self, other):
-        return self * (other ** -1)
+        return self * (other ** -1.0)
 
     def __radd__(self, other):
         return self + other
@@ -140,13 +140,21 @@ class Tensor:
     def __rtruediv__(self, other):
         return Tensor(other, requires_grad=False) / self
 
-    def sum(self):
-        out = Tensor(np.sum(self.data), (self,), 'sum')
+    def sum(self, axis=None, keepdims=False):
+        out = Tensor(np.sum(self.data, axis=axis, keepdims=keepdims), (self,), 'sum')
         def _backward():
             if self.requires_grad:
-                self.grad += unbroadcast(out.grad * np.ones_like(self.data), self.shape)
+                grad = out.grad
+                if axis is not None and not keepdims:
+                    grad = np.expand_dims(grad, axis)
+                self.grad += unbroadcast(grad * np.ones_like(self.data), self.shape)
         out._backward = _backward
         return out
+        
+    def mean(self, axis=None, keepdims=False):
+        out = self.sum(axis=axis, keepdims=keepdims)
+        n = np.prod(self.shape) if axis is None else self.shape[axis]
+        return out / n
 
     # Activation functions & Math
     def relu(self):

@@ -1,0 +1,20 @@
+digraph {
+	graph [rankdir=LR]
+	4423263840 [label="{ Input (x) | shape=(1, 2) }" fillcolor=lightgrey shape=record style=filled]
+	4423393376 [label="{ added | shape=(1, 2) }" fillcolor=lightblue shape=record style=filled]
+	"4423393376_+" [label="+" fillcolor=orange shape=oval style=filled]
+	"4423393376_+" -> 4423393376
+	4423393072 [label="{ hidden | shape=(1, 2) }" fillcolor=lightblue shape=record style=filled]
+	"4423393072_@" [label="@" fillcolor=orange shape=oval style=filled]
+	"4423393072_@" -> 4423393072
+	4423470928 [label="{ Weights (w) | shape=(2, 2) }" fillcolor=lightblue shape=record style=filled]
+	4423471568 [label="{ Bias (b) | shape=(1, 2) }" fillcolor=lightblue shape=record style=filled]
+	4422305264 [label="{ Output (y) | shape=(1, 2) }" fillcolor=lightblue shape=record style=filled]
+	"4422305264_relu" [label=relu fillcolor=orange shape=oval style=filled]
+	"4422305264_relu" -> 4422305264
+	4423393376 -> "4422305264_relu"
+	4423470928 -> "4423393072_@"
+	4423393072 -> "4423393376_+"
+	4423471568 -> "4423393376_+"
+	4423263840 -> "4423393072_@"
+}
